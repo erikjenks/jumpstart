@@ -38,7 +38,6 @@ def rails_6?
 end
 
 def add_gems
-  gem 'administrate', github: "thoughtbot/administrate"
   gem 'bootstrap', '~> 4.3', '>= 4.3.1'
   gem 'devise', '~> 4.6', '>= 4.6.1'
   gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
