@@ -13,7 +13,7 @@ def add_template_repository_to_source_path
     at_exit { FileUtils.remove_entry(tempdir) }
     git clone: [
       "--quiet",
-      "https://github.com/excid3/jumpstart.git",
+      "https://github.com/erikjenks/jumpstart.git",
       tempdir
     ].map(&:shellescape).join(" ")
 
@@ -34,18 +34,16 @@ def rails_5?
 end
 
 def rails_6?
-  Gem::Requirement.new(">= 6.0.0.beta1", "< 7").satisfied_by? rails_version
+  Gem::Requirement.new(">= 6.0.0.rc2", "< 7").satisfied_by? rails_version
 end
 
 def add_gems
-  gem 'administrate', github: "thoughtbot/administrate"
   gem 'bootstrap', '~> 4.3', '>= 4.3.1'
   gem 'devise', '~> 4.6', '>= 4.6.1'
   gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
   gem 'devise_masquerade', '~> 0.6.2'
   gem 'font-awesome-sass', '~> 5.6', '>= 5.6.1'
   gem 'friendly_id', '~> 5.2', '>= 5.2.5'
-  gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
   gem 'mini_magick', '~> 4.9', '>= 4.9.2'
   gem 'name_of_person', '~> 1.1'
   gem 'omniauth-facebook', '~> 5.0'
@@ -176,34 +174,6 @@ def add_notifications
   route "resources :notifications, only: [:index]"
 end
 
-def add_administrate
-  generate "administrate:install"
-
-  #gsub_file "app/dashboards/announcement_dashboard.rb",
-    #/announcement_type: Field::String/,
-    #"announcement_type: Field::Select.with_options(collection: Announcement::TYPES)"
-
-  gsub_file "app/dashboards/user_dashboard.rb",
-    /email: Field::String/,
-    "email: Field::String,\n    password: Field::String.with_options(searchable: false)"
-
-  gsub_file "app/dashboards/user_dashboard.rb",
-    /FORM_ATTRIBUTES = \[/,
-    "FORM_ATTRIBUTES = [\n    :password,"
-
-  gsub_file "app/controllers/admin/application_controller.rb",
-    /# TODO Add authentication logic here\./,
-    "redirect_to '/', alert: 'Not authorized.' unless user_signed_in? && current_user.admin?"
-
-  environment do <<-RUBY
-    # Expose our application's helpers to Administrate
-    config.to_prepare do
-      Administrate::ApplicationController.helper #{@app_name.camelize}::Application.helpers
-    end
-  RUBY
-  end
-end
-
 def add_multiple_authentication
     insert_into_file "config/routes.rb",
     ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
@@ -270,9 +240,6 @@ after_bundle do
   # Migrate
   rails_command "db:create"
   rails_command "db:migrate"
-
-  # Migrations must be done before this
-  add_administrate
 
   # Commit everything to git
   git :init
