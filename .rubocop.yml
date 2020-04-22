@@ -1,0 +1,48 @@
+AllCops:
+  Exclude:
+    - "**/*.erb"
+    - "db/seeds.rb"
+    - "node_modules/**/*"
+
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "Rakefile"
+    - "**/*.rake"
+    - "db/schema.rb"
+    - "spec/**/*.rb"
+
+Metrics/LineLength:
+  Exclude:
+    - "Gemfile"
+    - "Rakefile"
+    - "config/initializers/*.rb"
+    - "db/schema.rb"
+    - "db/**/*.rb"
+    - "spec/**/*.rb"
+  Max: 115
+
+Metrics/MethodLength:
+  Exclude:
+    - "db/**/*.rb"
+  Max: 30
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyMethod:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
