@@ -56,11 +56,11 @@ def add_gems
   gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
   gem 'whenever', require: false
 
-  group :development do
+  gem_group :development do
     gem 'rubocop', require: false
   end
 
-  group :development, :test do
+  gem_group :development, :test do
     gem 'rspec-rails'
     gem 'factory_bot_rails'
   end
