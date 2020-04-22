@@ -41,7 +41,7 @@ def add_gems
   gem 'bootstrap', '~> 4.3', '>= 4.3.1'
   gem 'devise', '~> 4.7', '>= 4.7.0'
   gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
-  gem 'devise_masquerade', '~> 0.6.2'
+  gem 'devise_masquerade', '~> 1.2'
   gem 'font-awesome-sass', '~> 5.6', '>= 5.6.1'
   gem 'friendly_id', '~> 5.2', '>= 5.2.5'
   gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
@@ -50,7 +50,7 @@ def add_gems
   gem 'omniauth-facebook', '~> 5.0'
   gem 'omniauth-github', '~> 1.3'
   gem 'omniauth-twitter', '~> 1.4'
-  gem 'sidekiq', '~> 5.2', '>= 5.2.5'
+  gem 'sidekiq', '~> 6.0', '>= 6.0.3'
   gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
   gem 'whenever', require: false
 
@@ -175,6 +175,41 @@ def add_notifications
   route "resources :notifications, only: [:index]"
 end
 
+<<<<<<< HEAD
+=======
+def add_administrate
+  generate "administrate:install"
+
+  append_to_file "app/assets/config/manifest.js" do
+    "//= link administrate/application.css\n//= link administrate/application.js"
+  end
+
+  gsub_file "app/dashboards/announcement_dashboard.rb",
+    /announcement_type: Field::String/,
+    "announcement_type: Field::Select.with_options(collection: Announcement::TYPES)"
+
+  gsub_file "app/dashboards/user_dashboard.rb",
+    /email: Field::String/,
+    "email: Field::String,\n    password: Field::String.with_options(searchable: false)"
+
+  gsub_file "app/dashboards/user_dashboard.rb",
+    /FORM_ATTRIBUTES = \[/,
+    "FORM_ATTRIBUTES = [\n    :password,"
+
+  gsub_file "app/controllers/admin/application_controller.rb",
+    /# TODO Add authentication logic here\./,
+    "redirect_to '/', alert: 'Not authorized.' unless user_signed_in? && current_user.admin?"
+
+  environment do <<-RUBY
+    # Expose our application's helpers to Administrate
+    config.to_prepare do
+      Administrate::ApplicationController.helper #{@app_name.camelize}::Application.helpers
+    end
+  RUBY
+  end
+end
+
+>>>>>>> original/master
 def add_multiple_authentication
     insert_into_file "config/routes.rb",
     ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
