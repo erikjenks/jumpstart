@@ -175,41 +175,6 @@ def add_notifications
   route "resources :notifications, only: [:index]"
 end
 
-<<<<<<< HEAD
-=======
-def add_administrate
-  generate "administrate:install"
-
-  append_to_file "app/assets/config/manifest.js" do
-    "//= link administrate/application.css\n//= link administrate/application.js"
-  end
-
-  gsub_file "app/dashboards/announcement_dashboard.rb",
-    /announcement_type: Field::String/,
-    "announcement_type: Field::Select.with_options(collection: Announcement::TYPES)"
-
-  gsub_file "app/dashboards/user_dashboard.rb",
-    /email: Field::String/,
-    "email: Field::String,\n    password: Field::String.with_options(searchable: false)"
-
-  gsub_file "app/dashboards/user_dashboard.rb",
-    /FORM_ATTRIBUTES = \[/,
-    "FORM_ATTRIBUTES = [\n    :password,"
-
-  gsub_file "app/controllers/admin/application_controller.rb",
-    /# TODO Add authentication logic here\./,
-    "redirect_to '/', alert: 'Not authorized.' unless user_signed_in? && current_user.admin?"
-
-  environment do <<-RUBY
-    # Expose our application's helpers to Administrate
-    config.to_prepare do
-      Administrate::ApplicationController.helper #{@app_name.camelize}::Application.helpers
-    end
-  RUBY
-  end
-end
-
->>>>>>> original/master
 def add_multiple_authentication
     insert_into_file "config/routes.rb",
     ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
